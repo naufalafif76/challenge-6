@@ -1,0 +1,351 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Car Management API",
+    "description": "OpenAPI for Challenge-06 Car Management API",
+    "version": "1.0.0",
+    "author": "naufalafif"
+  },
+  "tags": [{
+      "name": "Users",
+      "description": "Users API Collection"
+    },
+    {
+      "name": "Cars",
+      "description": "Cars API Collection"
+    }
+  ],
+  "servers": [{
+    "description": "Car Management API Server",
+    "url": "http://localhost:8081/api/v1"
+  }],
+  "externalDocs": {
+    "url": "https://swagger.io/docs/specification/about/",
+    "description": "OpenAPI Guide"
+  },
+  "paths": {
+    "/register": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create new user",
+        "description": "Create new user as member",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "email.example@gmail.com"
+                  },
+                  "username": {
+                    "type": "string",
+                    "example": "example123"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "example123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User Successfully Registered!"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Login user",
+        "description": "Login user that successfully registered",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "email.example@gmail.com"
+                  },
+                  "username": {
+                    "type": "string",
+                    "example": "example123"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "example123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success login"
+          }
+        }
+      }
+    },
+    "/users/{id}/update-admin": {
+      "put": {
+        "security": [{
+          "UserAuth": []
+        }],
+        "tags": ["Users"],
+        "summary": "To change user's role from member to admin. ",
+        "description": "Only superadmin that can change role of user.",
+        "parameters": [{
+          "$ref": "#/components/parameters/idUser"
+        }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "isAdmin": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/users": {
+      "get": {
+        "security": [{
+          "UserAuth": []
+        }],
+        "tags": ["Users"],
+        "summary": "To get all the user's data",
+        "description": "Only user that succesfully logged in can do this action.",
+        "responses": {}
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "security": [{
+          "UserAuth": []
+        }],
+        "tags": ["Users"],
+        "summary": "To get user's data by id",
+        "description": "All member, admin, or superadmin can do this action.",
+        "parameters": [{
+          "$ref": "#/components/parameters/idUser"
+        }],
+        "responses": {}
+      },
+      "put": {
+        "security": [{
+          "UserAuth": []
+        }],
+        "tags": ["Users"],
+        "summary": "To update user's data",
+        "description": "Only related user, admin, or superadmin can do this action. Email cannot be updated",
+        "parameters": [{
+          "$ref": "#/components/parameters/idUser"
+        }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "example123"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "example123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {}
+      },
+      "delete": {
+        "security": [{
+          "UserAuth": []
+        }],
+        "tags": ["Users"],
+        "summary": "To delete user's data",
+        "description": "Only related user, admin, or superadmin can do this action.",
+        "parameters": [{
+          "$ref": "#/components/parameters/idUser"
+        }],
+        "responses": {}
+      }
+    },
+    "/create-data-car": {
+      "post": {
+        "security": [{
+          "UserAuth": []
+        }],
+        "tags": ["Cars"],
+        "summary": "Create New Car By",
+        "description": "Create one car by admin or superadmin only",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CarSchemaReqBody"
+              },
+              "examples": {
+                "example-input": {
+                  "description": "Example Create New Car",
+                  "value": {
+                    "plate": "VPT-9753",
+                    "manufacture": "BMW",
+                    "model": "M5",
+                    "image": "https://picsum.photos/200/300",
+                    "rentPerDay": 900000,
+                    "capacity": 6,
+                    "description": " Mantap gan",
+                    "availableAt": "2022-03-23T15:49:05.563Z",
+                    "transmission": "Manual",
+                    "available": false,
+                    "type": "Hatchback",
+                    "year": "2018"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/cars": {
+      "get": {
+        "security": [{
+          "UserAuth": []
+        }],
+        "tags": ["Cars"],
+        "summary": "To get all cars data that not deleted",
+        "description": "All member, admin, or superadmin can do this action.",
+        "responses": {}
+      }
+    },
+    "/cars/{id}": {
+      "get": {
+        "security": [{
+          "UserAuth": []
+        }],
+        "tags": ["Cars"],
+        "summary": "To get car's data by id",
+        "description": "All member, admin, or superadmin can do this action.",
+        "parameters": [{
+          "$ref": "#/components/parameters/idCar"
+        }],
+        "responses": {}
+      },
+      "put": {
+        "security": [{
+          "UserAuth": []
+        }],
+        "tags": ["Cars"],
+        "summary": "To update car's data by id",
+        "description": "Only admin or superadmin can do this action.",
+        "parameters": [{
+          "$ref": "#/components/parameters/idCar"
+        }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CarSchemaReqBody"
+              },
+              "examples": {
+                "example-input": {
+                  "description": "Example Create New Car",
+                  "value": {
+                    "plate": "VPT-9753",
+                    "manufacture": "BMW",
+                    "model": "M5",
+                    "image": "https://picsum.photos/200/300",
+                    "rentPerDay": 900000,
+                    "capacity": 6,
+                    "description": " Mantap gan",
+                    "availableAt": "2022-03-23T15:49:05.563Z",
+                    "transmission": "Manual",
+                    "available": false,
+                    "type": "Hatchback",
+                    "year": "2018"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {}
+      },
+      "delete": {
+        "security": [{
+          "UserAuth": []
+        }],
+        "tags": ["Cars"],
+        "summary": "To delete car's data",
+        "description": "Only admin or superadmin can do this action.",
+        "parameters": [{
+          "$ref": "#/components/parameters/idCar"
+        }],
+        "responses": {}
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "UserAuth": {
+        "description": "Authentication for Car Management API",
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "parameters": {
+      "idUser": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "User id for get spesific user",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        }
+      },
+      "idCar": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Car id for get spesific car",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        }
+      }
+    }
+  }
+}
